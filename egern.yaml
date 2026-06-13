@@ -1,0 +1,300 @@
+# Loon 进阶配置（全类型策略组版） - 此配置文件包含全部自动类型策略组，你可以选择你需要的自动策略组类型。默认会自动选择网络时延最低的代理节点，无需人工干预，所有过程完全自动化。当连接到配备透明代理的路由器时，Loon 将使用“直连”策略，此时所有流量直接通过你的路由器；在其他网络环境中，Loon 将使用自身的“自动分流”模式访问这些网站，从而避免在已使用透明代理路由器时出现双重代理。
+# Date: 2025-11-08 00:21:37
+# Author: https://t.me/iKeLee
+# 更多插件可前往 https://hub.kelee.one 安装
+
+[General]
+ip-mode=v4-only
+ipv6-vif=off
+dns-server=system
+sni-sniffing=true
+disable-stun=true
+dns-reject-mode=LoopbackIP
+domain-reject-mode=DNS
+udp-fallback-mode=REJECT
+wifi-access-http-port=7222
+wifi-access-socks5-port=7221
+allow-wifi-access=false
+interface-mode=auto
+test-timeout=5
+disconnect-on-policy-change=false
+internet-test-url=http://connectivitycheck.platform.hicloud.com/generate_204
+proxy-test-url=http://www.gstatic.com/generate_204
+resource-parser=https://raw.githubusercontent.com/sub-store-org/Sub-Store/release/sub-store-parser.loon.min.js
+geoip-url=https://geodata.kelee.one/Country-Masaiki.mmdb
+ipasn-url=https://geodata.kelee.one/GeoLite2-ASN-P3TERX.mmdb
+skip-proxy=192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12, localhost, *.local, e.crashlynatics.com
+bypass-tun=10.0.0.0/8, 100.64.0.0/10, 127.0.0.0/8, 169.254.0.0/16, 172.16.0.0/12, 192.0.0.0/24, 192.0.2.0/24, 192.88.99.0/24, 192.168.0.0/16, 198.51.100.0/24, 203.0.113.0/24, 224.0.0.0/4, 255.255.255.255/32
+
+[Proxy]
+policy_groups:
+- select:
+    name: 节点选择
+    policies:
+    - DMIT
+    flatten: false
+    filter: ^((?!WGD).)*$
+    hidden: false
+- auto_test:
+    name: DMIT
+    policies: []
+    filter: dmit
+    interval: 1800
+    latency_test_url: http://www.gstatic.com/generate_204
+    tolerance: 10
+    timeout: 5
+- select:
+    name: Google
+    policies:
+    - 节点选择
+    - bwh
+    - GCP
+    - ss-bwh
+    - ss-dm
+    - dmit
+- select:
+    name: Youtube
+    policies:
+    - 节点选择
+    - bwh
+    - GCP
+    - ss-bwh
+    - ss-dm
+    - dmit
+- select:
+    name: gemini
+    policies:
+    - 节点选择
+    - bwh
+    - GCP
+    - ss-bwh
+    - ss-dm
+    - dmit
+- select:
+    name: chatgpt
+    policies:
+    - 节点选择
+    - bwh
+    - GCP
+    - ss-bwh
+    - ss-dm
+    - dmit
+- select:
+    name: Claude
+    policies:
+    - 节点选择
+    - bwh
+    - GCP
+    - ss-bwh
+    - ss-dm
+    - dmit
+- select:
+    name: telegram
+    policies:
+    - 节点选择
+    - bwh
+    - GCP
+    - ss-bwh
+    - ss-dm
+    - dmit
+- select:
+    name: spotify
+    policies:
+    - 节点选择
+    - DIRECT
+    - bwh
+    - GCP
+    - ss-bwh
+    - ss-dm
+    - dmit
+- select:
+    name: Tiktok
+    policies:
+    - 节点选择
+    - bwh
+    - GCP
+    - ss-bwh
+    - ss-dm
+    - dmit
+- select:
+    name: Instagram
+    policies:
+    - 节点选择
+    - bwh
+    - GCP
+    - ss-bwh
+    - ss-dm
+    - dmit
+- select:
+    name: Bilibili
+    policies:
+    - direct
+    - bwh
+    - GCP
+    - ss-bwh
+    - ss-dm
+    - dmit
+- select:
+    name: Apple
+    policies:
+    - direct
+    - bwh
+    - GCP
+    - ss-bwh
+    - ss-dm
+    - dmit
+- select:
+    name: Microsoft
+    policies:
+    - direct
+    - bwh
+    - GCP
+    - ss-bwh
+    - ss-dm
+    - dmit
+rules:
+- ip_cidr:
+    match: 192.168.50.0/24
+    policy: WGD
+    no_resolve: true
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/Lan/Lan.list
+    policy: DIRECT
+- domain_suffix:
+    match: gdt.qq.com
+    policy: REJECT
+- domain_suffix:
+    match: adsmind.gdtimg.com
+    policy: REJECT
+- url_regex:
+    match: ^https:\/\/adsmind\.ugdtimg\.com\/.*
+    policy: REJECT
+- domain_suffix:
+    match: dash.cloudflare.com
+    policy: DIRECT
+- domain_suffix:
+    match: wangmoyu.com
+    policy: DIRECT
+- domain_keyword:
+    match: clubsim
+    policy: DIRECT
+- domain_keyword:
+    match: whatsapp
+    policy: 节点选择
+- domain_keyword:
+    match: t66y
+    policy: 节点选择
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/WeChat/WeChat.list
+    policy: DIRECT
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/ChinaMedia/ChinaMedia.list
+    policy: direct
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/BiliBili/BiliBili.list
+    policy: BILIBILI
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/Douyu/Douyu.list
+    policy: DIRECT
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/Apple/Apple.list
+    policy: APPLE
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/Spotify/Spotify.list
+    policy: SPOTIFY
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/Microsoft/Microsoft.list
+    policy: Microsoft
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/GoogleVoice/GoogleVoice.list
+    policy: 节点选择
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/YouTube/YouTube.list
+    policy: YOUTUBE
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/Gemini/Gemini.list
+    policy: GEMINI
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/Google/Google.list
+    policy: GOOGLE
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/OpenAI/OpenAI.list
+    policy: CHATGPT
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/Claude/Claude.list
+    policy: Claude
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/TikTok/TikTok.list
+    policy: TIKTOK
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/Telegram/Telegram.list
+    policy: TELEGRAM
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/Twitter/Twitter.list
+    policy: 节点选择
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/Instagram/Instagram.list
+    policy: INSTAGRAM
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/GitHub/GitHub.list
+    policy: 节点选择
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/Reddit/Reddit.list
+    policy: 节点选择
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/Global/Global.list
+    policy: 节点选择
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/Direct/Direct.list
+    policy: DIRECT
+- rule_set:
+    match: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Shadowrocket/ChinaIPs/ChinaIPs.list
+    policy: DIRECT
+- geoip:
+    match: CN
+    policy: DIRECT
+- default:
+    policy: 节点选择
+
+[Rule]
+# 当配置文件中没有任何有效策略组时，Loon将使用内置的PROXY策略组
+# 当配置文件中存在有效的策略组时，内置的PROXY策略组将不再允许被调用，仅可使用用户配置的策略组
+# 配置文件已自带远程GEOIP, cn, DIRECT规则，请勿在此添加
+# 请勿修改远程CN REGION规则的排序甚至删除
+IP-CIDR, 28.0.0.1/8, DIRECT
+IP-CIDR, 198.18.0.1/16, DIRECT
+IP-CIDR, 198.18.0.0/15, DIRECT
+IP-CIDR6, fc00::/18, DIRECT
+FINAL, 节点选择
+
+[Remote Rule]
+https://kelee.one/Tool/Loon/Lsr/TikTok.lsr, policy=节点选择, tag=TikTok, enabled=true
+https://kelee.one/Tool/Loon/Lsr/AI.lsr, policy=节点选择, tag=AI, enabled=true
+https://kelee.one/Tool/Loon/Lsr/SpeedtestInternational.lsr, policy=节点选择, tag=Speedtest Intl, enabled=true
+https://rule.kelee.one/Loon/Netflix.lsr, policy=节点选择, tag=Netflix, enabled=true
+https://kelee.one/Tool/Loon/Lsr/LAN_SPLITTER.lsr, policy=DIRECT, tag=LAN, enabled=true
+https://kelee.one/Tool/Loon/Lsr/REGION_SPLITTER.lsr, policy=DIRECT, tag=CN REGION, enabled=true
+
+[Host]
+ssid: ASUS_5G=server: 192.168.50.1
+
+[Rewrite]
+
+[Script]
+
+[Plugin]
+https://kelee.one/Tool/Loon/Lpx/Block_HTTPDNS.lpx, pin=true, enabled=true
+https://kelee.one/Tool/Loon/Lpx/BlockAdvertisers.lpx, pin=true, enabled=true
+https://kelee.one/Tool/Loon/Lpx/QuickSearch.lpx, enabled=true
+https://kelee.one/Tool/Loon/Lpx/Prevent_DNS_Leaks.lpx, policy=FINAL, enabled=true
+https://kelee.one/Tool/Loon/Lpx/Node_detection_tool.lpx, enabled=true
+https://kelee.one/Tool/Loon/Lpx/TestFlightRegionUnlock.lpx, policy=DIRECT, enabled=false
+https://kelee.one/Tool/Loon/Lpx/BoxJs.lpx, policy=FINAL, enabled=true
+https://kelee.one/Tool/Loon/Lpx/Sub-Store.lpx, policy=FINAL, enabled=true
+https://kelee.one/Tool/Loon/Lpx/Script-Hub.lpx, policy=FINAL, enabled=true
+
+[Mitm]
+hostname=
+ca-p12=
+ca-passphrase=
+skip-server-cert-verify=false
